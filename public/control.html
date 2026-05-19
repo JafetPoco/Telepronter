@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teleprompter - Control</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: white;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        /* Panel de estado */
+        .status-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .status-card h3 {
+            margin-bottom: 10px;
+            color: #aaa;
+        }
+
+        .current-line {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #ffd700;
+        }
+
+        /* Botones principales */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 18px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.02);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-prev { border-color: #ff6b6b; }
+        .btn-next { border-color: #4ecdc4; }
+        .btn-reset { border-color: #ffe66d; color: #ffe66d; }
+
+        /* Lista de canciones */
+        .songs-section {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .songs-section h3 {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .song-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .song-item {
+            padding: 12px 16px;
+            margin: 8px 0;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .song-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(5px);
+        }
+
+        .song-item.active {
+            background: rgba(78, 205, 196, 0.3);
+            border-left: 4px solid #4ecdc4;
+        }
+
+        .song-title {
+            font-weight: 500;
+        }
+
+        .song-lines {
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        /* Scroll personalizado */
+        .song-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .song-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+        .song-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        /* Estado de conexión */
+        .connection-badge {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #aaa;
+        }
+
+        @media (max-width: 600px) {
+            .button-grid {
+                grid-template-columns: 1fr;
+            }
+            button {
+                padding: 14px;
+            }
+            .current-line {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Control del Teleprompter</h1>
+
+        <div class="status-card">
+            <h3>📺 Estado actual</h3>
+            <div id="currentSong">Cargando...</div>
+            <div class="current-line" id="currentLine">-</div>
+            <div id="progress" style="font-size: 0.9rem; color: #aaa;"></div>
+        </div>
+
+        <div class="button-grid">
+            <button class="btn-prev" id="btnPrev">◀ Anterior línea</button>
+            <button class="btn-next" id="btnNext">Siguiente línea ▶</button>
+            <button class="btn-reset" id="btnReset">⟳ Reiniciar canción</button>
+        </div>
+
+        <div class="songs-section">
+            <h3>📋 Lista de canciones</h3>
+            <div class="song-list" id="songList">
+                <div style="text-align: center; padding: 20px;">Cargando canciones...</div>
+            </div>
+        </div>
+
+        <div class="connection-badge" id="connectionStatus">
+            Conectando al servidor...
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        let canciones = [];
+
+        // Elementos
+        const currentSongEl = document.getElementById('currentSong');
+        const currentLineEl = document.getElementById('currentLine');
+        const progressEl = document.getElementById('progress');
+        const songListEl = document.getElementById('songList');
+        const connectionStatus = document.getElementById('connectionStatus');
+
+        // Botones
+        document.getElementById('btnPrev').onclick = () => socket.emit('anterior-linea');
+        document.getElementById('btnNext').onclick = () => socket.emit('siguiente-linea');
+        document.getElementById('btnReset').onclick = () => socket.emit('reset');
+
+        // Estado inicial
+        socket.on('estado-inicial', (estado) => {
+            canciones = estado.canciones;
+            actualizarUI(estado);
+            renderizarLista(estado);
+            connectionStatus.textContent = '✅ Conectado al servidor';
+            connectionStatus.style.color = '#4ecdc4';
+        });
+
+        // Actualizaciones
+        socket.on('actualizar-estado', (estado) => {
+            actualizarUI(estado);
+            renderizarLista(estado);
+        });
+
+        function actualizarUI(estado) {
+            const cancion = estado.canciones[estado.cancionActual];
+            const linea = cancion.letra[estado.lineaActual];
+            
+            currentSongEl.innerHTML = `🎵 <strong>${cancion.titulo}</strong>`;
+            currentLineEl.textContent = `"${linea}"`;
+            progressEl.textContent = `Línea ${estado.lineaActual + 1} de ${cancion.letra.length}`;
+        }
+
+        function renderizarLista(estado) {
+            if (!canciones.length) {
+                songListEl.innerHTML = '<div style="text-align: center; padding: 20px;">No hay canciones</div>';
+                return;
+            }
+
+            songListEl.innerHTML = canciones.map((cancion, idx) => `
+                <div class="song-item ${idx === estado.cancionActual ? 'active' : ''}" data-index="${idx}">
+                    <div>
+                        <div class="song-title">${cancion.titulo}</div>
+                        <div class="song-lines">${cancion.letra.length} líneas</div>
+                    </div>
+                    <div>${idx === estado.cancionActual ? '▶' : ''}</div>
+                </div>
+            `).join('');
+
+            // Agregar eventos a cada canción
+            document.querySelectorAll('.song-item').forEach(el => {
+                el.onclick = () => {
+                    const index = parseInt(el.dataset.index);
+                    socket.emit('cambiar-cancion', index);
+                };
+            });
+        }
+
+        // Manejo de desconexión
+        socket.on('disconnect', () => {
+            connectionStatus.textContent = '⚠️ Desconectado del servidor';
+            connectionStatus.style.color = '#ff6b6b';
+        });
+
+        socket.on('connect', () => {
+            connectionStatus.textContent = '✅ Conectado al servidor';
+            connectionStatus.style.color = '#4ecdc4';
+        });
+    </script>
+</body>
+</html>

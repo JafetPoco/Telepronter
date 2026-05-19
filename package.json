@@ -1,0 +1,20 @@
+{
+  "name": "teleprompter-live",
+  "version": "1.0.0",
+  "description": "Teleprompter local para letras de canciones",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "socket.io": "^4.5.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["teleprompter", "lyrics", "music"],
+  "author": "",
+  "license": "MIT"
+}
