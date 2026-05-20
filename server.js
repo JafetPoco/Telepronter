@@ -92,11 +92,35 @@ io.on('connection', (socket) => {
     estado.lineaActual = 0;
     io.emit('actualizar-estado', estado);
   });
+
+  //Ir Coro
+  socket.on('ir-al-coro', () => {
+    const cancion = estado.canciones[estado.cancionActual];
+
+    if(cancion.coros){
+      estado.lineaActual = cancion.coros.principal.inicio;
+    }
+
+    io.emit('actualizar-estado', estado);
+  })
 });
 
 // Servir archivos estáticos
 app.use(express.static('public'));
 app.use('/videos', express.static('videos'));
+
+const networkInterfaces = require('os').networkInterfaces();
+
+// Obtener IP local automáticamente
+let localIp = 'localhost';
+for (const interface of Object.values(networkInterfaces)) {
+  for (const config of interface) {
+    if (config.family === 'IPv4' && !config.internal) {
+      localIp = config.address;
+      break;
+    }
+  }
+}
 
 // Iniciar servidor
 const PORT = 3000;
@@ -104,5 +128,7 @@ server.listen(PORT, () => {
   console.log('\n🎤 Teleprompter Live iniciado');
   console.log(`📺 Pantalla: http://localhost:${PORT}/screen.html`);
   console.log(`🎮 Control: http://localhost:${PORT}/control.html`);
+  console.log(`📺 Pantalla: http://${localIp}:${PORT}/screen.html`);
+  console.log(`🎮 Control: http://${localIp}:${PORT}/control.html`);
   console.log('\nPara usar desde otros dispositivos, usa tu IP local\n');
 });

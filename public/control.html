@@ -185,6 +185,7 @@
         <div class="button-grid">
             <button class="btn-prev" id="btnPrev">◀ Anterior línea</button>
             <button class="btn-next" id="btnNext">Siguiente línea ▶</button>
+            <button class="btn-coro" id="btnCoro">Ir al coro</button>
             <button class="btn-reset" id="btnReset">⟳ Reiniciar canción</button>
         </div>
 
@@ -216,6 +217,7 @@
         document.getElementById('btnPrev').onclick = () => socket.emit('anterior-linea');
         document.getElementById('btnNext').onclick = () => socket.emit('siguiente-linea');
         document.getElementById('btnReset').onclick = () => socket.emit('reset');
+        document.getElementById('btnCoro').onclick = () => socket.emit('ir-al-coro');
 
         // Estado inicial
         socket.on('estado-inicial', (estado) => {
