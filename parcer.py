@@ -13,6 +13,7 @@ def parsear_letra(archivo_txt):
     for linea in lineas:
         if linea.startswith('#'):
             titulo = linea[1:].strip()
+            titulo = titulo.upper()
             break
     
     # Limpiar líneas vacías y marcadores
@@ -31,27 +32,27 @@ def parsear_letra(archivo_txt):
             continue
         
         # Detectar inicio de coro
-        if '[CHORUS]' in linea.upper() and not dentro_coro:
+        if '[CORO]' in linea.upper() and not dentro_coro:
             coro_actual = 'principal'
             dentro_coro = True
             coros[coro_actual] = {'inicio': contador_lineas, 'fin': None}
             continue
         
         # Detectar inicio de bridge/puente
-        if '[BRIDGE]' in linea.upper() and not dentro_puente:
+        if '[PUENTE]' in linea.upper() and not dentro_puente:
             coro_actual = 'puente'
             dentro_puente = True
             coros[coro_actual] = {'inicio': contador_lineas, 'fin': None}
             continue
         
         # Detectar fin de sección
-        if '[/CHORUS]' in linea.upper() and dentro_coro:
+        if '[/CORO]' in linea.upper() and dentro_coro:
             coros['principal']['fin'] = contador_lineas - 1
             dentro_coro = False
             coro_actual = None
             continue
         
-        if '[/BRIDGE]' in linea.upper() and dentro_puente:
+        if '[/PUENTE]' in linea.upper() and dentro_puente:
             coros['puente']['fin'] = contador_lineas - 1
             dentro_puente = False
             coro_actual = None
@@ -101,5 +102,4 @@ def procesar_carpeta(carpeta_entrada, archivo_salida):
 
 # Ejecutar
 if __name__ == "__main__":
-    # Procesar todos los .txt en la carpeta "letras/"
     procesar_carpeta("letras", "./data/canciones.json")
