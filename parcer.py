@@ -23,6 +23,8 @@ def parsear_letra(archivo_txt):
     contador_lineas = 0
     dentro_coro = False
     dentro_puente = False
+
+    letra_plana.append(titulo)
     
     for i, linea in enumerate(lineas):
         linea = linea.rstrip('\n')
@@ -63,7 +65,7 @@ def parsear_letra(archivo_txt):
             continue
         
         # Agregar línea normal
-        letra_plana.append(linea.strip())
+        letra_plana.append(linea.replace("/","<br>").strip())
         
         # Si estamos dentro de un coro y no hay [/CHORUS], actualizar fin automáticamente
         if dentro_coro and coro_actual:

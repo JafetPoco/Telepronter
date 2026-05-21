@@ -23,7 +23,7 @@ function actualizarPantalla(estado) {
   const cancion = estado.canciones[estado.cancionActual];
   const linea = cancion.letra[estado.lineaActual];
 
-  lyricDisplay.textContent = linea;
+  lyricDisplay.innerHTML = linea;
   songInfo.textContent = `${cancion.titulo} • ${estado.lineaActual + 1}/${cancion.letra.length}`;
 
   // Reanimar efecto
