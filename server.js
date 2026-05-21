@@ -19,33 +19,6 @@ let estado = {
 const cancionesPath = './data/canciones.json';
 if (fs.existsSync(cancionesPath)) {
   estado.canciones = JSON.parse(fs.readFileSync(cancionesPath, 'utf8'));
-} else {
-  // Canciones de ejemplo
-  estado.canciones = [
-    {
-      id: 1,
-      titulo: 'Canción de ejemplo 1',
-      letra: [
-        'Esta es la primera línea',
-        'Esta es la segunda línea',
-        'Y esta es la tercera línea'
-      ]
-    },
-    {
-      id: 2,
-      titulo: 'Canción de ejemplo 2',
-      letra: [
-        'Otro verso inicial',
-        'El estribillo pega fuerte',
-        'Y cerramos con broche de oro'
-      ]
-    }
-  ];
-}
-
-// Guardar canciones
-function guardarCanciones() {
-  fs.writeFileSync(cancionesPath, JSON.stringify(estado.canciones, null, 2));
 }
 
 // WebSocket
