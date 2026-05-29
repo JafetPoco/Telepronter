@@ -1,8 +1,8 @@
 const express = require('express');
-const http = require('http');
+const http = require('node:http');
 const socketIO = require('socket.io');
-const path = require('path');
-const fs = require('fs');
+const path = require('node:path');
+const fs = require('node:fs');
 
 const app = express();
 const server = http.createServer(app);
@@ -12,7 +12,8 @@ const io = socketIO(server);
 let estado = {
   cancionActual: 0,
   lineaActual: 0,
-  canciones: []
+  canciones: [],
+  modoPantalla: 'letras'
 };
 
 // Cargar canciones desde archivo
@@ -31,6 +32,9 @@ io.on('connection', (socket) => {
   // Siguiente línea
   socket.on('siguiente-linea', () => {
     const cancion = estado.canciones[estado.cancionActual];
+    if (!cancion) return;
+
+    estado.modoPantalla = 'letras';
     if (estado.lineaActual < cancion.letra.length - 1) {
       estado.lineaActual++;
     } else if (estado.cancionActual < estado.canciones.length - 1) {
@@ -42,6 +46,10 @@ io.on('connection', (socket) => {
   
   // Anterior línea
   socket.on('anterior-linea', () => {
+    const cancion = estado.canciones[estado.cancionActual];
+    if (!cancion) return;
+
+    estado.modoPantalla = 'letras';
     if (estado.lineaActual > 0) {
       estado.lineaActual--;
     } else if (estado.cancionActual > 0) {
@@ -56,6 +64,7 @@ io.on('connection', (socket) => {
     if (index >= 0 && index < estado.canciones.length) {
       estado.cancionActual = index;
       estado.lineaActual = 0;
+      estado.modoPantalla = 'letras';
       io.emit('actualizar-estado', estado);
     }
   });
@@ -63,31 +72,40 @@ io.on('connection', (socket) => {
   // Reiniciar canción actual
   socket.on('reset', () => {
     estado.lineaActual = 0;
+    estado.modoPantalla = 'letras';
     io.emit('actualizar-estado', estado);
   });
 
   //Ir Coro
   socket.on('ir-al-coro', () => {
     const cancion = estado.canciones[estado.cancionActual];
+    if (!cancion) return;
 
+    estado.modoPantalla = 'letras';
     if(cancion.coros){
       estado.lineaActual = cancion.coros.principal.inicio;
     }
 
     io.emit('actualizar-estado', estado);
   })
+
+  // Vista principal
+  socket.on('mostrar-vista-principal', () => {
+    estado.modoPantalla = 'principal';
+    io.emit('actualizar-estado', estado);
+  });
 });
 
 // Servir archivos estáticos
 app.use(express.static('public'));
 app.use('/videos', express.static('videos'));
 
-const networkInterfaces = require('os').networkInterfaces();
+const networkInterfaces = require('node:os').networkInterfaces();
 
 // Obtener IP local automáticamente
 let localIp = 'localhost';
-for (const interface of Object.values(networkInterfaces)) {
-  for (const config of interface) {
+for (const networkInterface of Object.values(networkInterfaces)) {
+  for (const config of networkInterface) {
     if (config.family === 'IPv4' && !config.internal) {
       localIp = config.address;
       break;

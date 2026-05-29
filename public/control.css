@@ -285,6 +285,11 @@ body {
     border-color: var(--warning);
 }
 
+.principal-btn:hover {
+    background: rgba(129, 140, 248, 0.2);
+    border-color: var(--primary-light);
+}
+
 .reset-btn:hover {
     background: rgba(239, 68, 68, 0.2);
     border-color: var(--danger);

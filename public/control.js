@@ -31,6 +31,11 @@ document.getElementById('btnCoro').onclick = () => {
     showToast('🎵 Saltando al coro');
 };
 
+document.getElementById('btnPrincipal').onclick = () => {
+    socket.emit('mostrar-vista-principal');
+    showToast('🖼️ Mostrando vista principal');
+};
+
 document.getElementById('btnReset').onclick = () => {
     socket.emit('reset');
     showToast('⟳ Canción reiniciada');
@@ -48,6 +53,10 @@ document.addEventListener('keydown', (e) => {
         case 'c':
         case 'C': 
             document.getElementById('btnCoro').click();
+            break;
+        case 'v':
+        case 'V':
+            document.getElementById('btnPrincipal').click();
             break;
         case 'r':
         case 'R': 
@@ -167,8 +176,8 @@ function renderizarLista(searchTerm = '') {
     // Agregar eventos a cada canción
     document.querySelectorAll('.song-item').forEach(el => {
         el.onclick = () => {
-            const index = parseInt(el.dataset.index);
-            if (!isNaN(index) && index !== cancionActual) {
+            const index = Number.parseInt(el.dataset.index, 10);
+            if (!Number.isNaN(index) && index !== cancionActual) {
                 socket.emit('cambiar-cancion', index);
                 showToast(`📀 Cambiando a: ${canciones[index].titulo}`);
             }
