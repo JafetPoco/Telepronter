@@ -23,14 +23,14 @@ def parsear_letra(archivo_txt):
     contador_lineas = 0
     dentro_coro = False
     dentro_puente = False
-
-    letra_plana.append(titulo)
     
     for i, linea in enumerate(lineas):
         linea = linea.rstrip('\n')
         
         # Saltar línea de título
         if linea.startswith('#'):
+            letra_plana.append(titulo)
+            contador_lineas += 1
             continue
         
         # Detectar inicio de coro

@@ -1,6 +1,173 @@
 [
   {
     "id": 1,
+    "titulo": "FE EN ACCIÓN",
+    "letra": [
+      "FE EN ACCIÓN",
+      "Yo creo en la cruz<br>Creo en tu amor",
+      "Que eres Señor<br>Que eres mi redentor",
+      "Yo creo en tu Santa Palabra<br>El Santo Espíritu me reveló",
+      "Eres el Cordero<br>Que el santo padre nos envió",
+      "Yo creo en la sangre<br>Creo en tu perdón",
+      "Que tu dolor<br>Nos trajo la salvación",
+      "Creo en tus promesas divinas<br>Que en tu nombre tendré libertad",
+      "Eres el camino<br>Que me llevará a la santa Sión",
+      "Ahora sé que con mi fe yo tengo una misión",
+      "Haciendo buenas obras esta fe implica acción",
+      "Llevando el mensaje y la verdad que es Jesús",
+      "Nos dio la vida eterna al entregarse en la cruz",
+      "Yo quiero mi fe en acción<br>Yo quiero mi fe en acción",
+      "Yo creo en la sangre<br>Creo en tu perdón",
+      "Que tu dolor<br>Nos trajo la salvación",
+      "Creo en tus promesas divinas<br>Que en tu nombre tendré libertad",
+      "Eres el camino<br>Que me llevará a la santa Sión",
+      "Ahora sé que con mi fe yo tengo una misión",
+      "Haciendo buenas obras esta fe implica acción",
+      "Llevando el mensaje y la verdad que es Jesús",
+      "Nos dio la vida eterna al entregarse en la cruz.",
+      "Ahora sé que con mi fe yo tengo una misión",
+      "Haciendo buenas obras esta fe implica acción",
+      "Llevando el mensaje y la verdad que es Jesús",
+      "Nos dio la vida eterna al entregarse en la cruz.",
+      "Yo quiero mi fe en acción<br>Yo quiero mi fe en acción"
+    ],
+    "coros": {
+      "principal": {
+        "inicio": 22,
+        "fin": 26
+      }
+    }
+  },
+  {
+    "id": 2,
+    "titulo": "LADO A LADO",
+    "letra": [
+      "LADO A LADO",
+      "Lado a lado estoy, con mi Salvador<br>Mi amigo es Jesús",
+      "Vivo por su amor, con Él yo soy feliz<br>Y de su mano siempre voy",
+      "Venid conmigo, juntemos las manos,<br>Aquí donde está Jesús,",
+      "Venid, cantemos en el mundo oscuro<br>Que Cristo es nuestra luz",
+      "Solitario estás desconfiado vas<br>Todo es odio alrededor",
+      "Pero en Jesús encontrarás amor,<br>Él te dará felicidad",
+      "Venid conmigo, juntemos las manos,<br>Aquí donde está Jesús,",
+      "Venid, cantemos en el mundo oscuro<br>Que Cristo es nuestra luz",
+      "Venid conmigo, juntemos las manos,<br>Aquí donde está Jesús,",
+      "Venid, cantemos en el mundo oscuro<br>Que Cristo es nuestra luz",
+      "Vamos de la mano del Señor"
+    ],
+    "coros": {
+      "principal": {
+        "inicio": 7,
+        "fin": 8
+      }
+    }
+  },
+  {
+    "id": 3,
+    "titulo": "MARANATA",
+    "letra": [
+      "MARANATA",
+      "Tenemos un llamado y un mensaje a predicar",
+      "Palabra poderosa, que vidas puede transformar",
+      "Es nuestro privilegio servir cumpliendo la misión",
+      "Llevando esperanza a toda tribu y nación,",
+      "A toda tribu y nación",
+      "Maranata, maranata, ya muy pronto Jesús volverá",
+      "Maranata, maranata, ya muy pronto Jesús volverá",
+      "Temed a Dios y dadle la honra, gloria y honor,",
+      "porque llegó la hora de su juicio de amor",
+      "Es nuestro privilegio, a todo el mundo anunciar",
+      "el evangelio eterno, decir que Cristo volverá,",
+      "que muy pronto volverá",
+      "Maranata, maranata, ya muy pronto Jesús volverá",
+      "Maranata, maranata, ya muy pronto Jesús volverá",
+      "Trabajando en unión,<br>anunciando salvación",
+      "La aurora llegará<br>y tu luz alumbrará",
+      "Tu Palabra es alimento,<br>de promesa y cumplimiento",
+      "La aurora llegará<br>y tu luz alumbrará",
+      "Trabajando en unión,<br>anunciando salvación",
+      "La aurora llegará<br>y tu luz alumbrará",
+      "Tu Palabra es alimento,<br>de promesa y cumplimiento",
+      "La aurora llegará<br>y tu luz alumbrará",
+      "Maranata, maranata, ya muy pronto Jesús volverá",
+      "Maranata, maranata, ya muy pronto Jesús volverá",
+      "Maranata, maranata, ya muy pronto Jesús volverá",
+      "Maranata, maranata, ya muy pronto Jesús volverá",
+      "Ya muy pronto Jesús volverá,<br>ya muy pronto Jesús volverá"
+    ],
+    "coros": {
+      "principal": {
+        "inicio": 23,
+        "fin": 24
+      }
+    }
+  },
+  {
+    "id": 4,
+    "titulo": "SOY MENSAJERO",
+    "letra": [
+      "SOY MENSAJERO",
+      "Hay días que, ni sé decir, no tengo motivación",
+      "Y siento en mí, dolor sin fin, no sé cuál es la razón",
+      "Pero a Jesús quiero aún buscar<br>Y mis rodillas doblar y orar",
+      "Delante de él puedo así llorar<br>Y abrir mi corazón",
+      "Y abrir mi corazón",
+      "Ya puedo ver el sol brillar<br>Siento una brisa de paz",
+      "Y sin dudar voy a cantar<br>De mi Jesús quiero hablar",
+      "Soy mensajero del Rey Señor<br>Soy un testigo de su amor",
+      "Al mundo entero proclamaré<br>Que Jesús volverá otra vez",
+      "Que Jesús volverá otra vez",
+      "Soy mensajero del Rey Señor<br>Soy un testigo de su amor",
+      "Al mundo entero proclamaré<br>Que Jesús volverá otra vez",
+      "Que Jesús volverá otra vez"
+    ],
+    "coros": {
+      "principal": {
+        "inicio": 11,
+        "fin": 13
+      }
+    }
+  },
+  {
+    "id": 5,
+    "titulo": "MI LUGAR EN EL MUNDO",
+    "letra": [
+      "MI LUGAR EN EL MUNDO",
+      "Fui alcanzado por tu amor,<br>soy un testigo por donde voy",
+      "En cada calle, cada nación,<br>llevo tu gracia, tu salvación",
+      "Donde hay tinieblas quiero llegar,<br>con tu Palabra a libertar",
+      "Donde haya odio que lleve amor,<br>Viviendo siempre por ti, Señor",
+      "Estoy en este mundo para anunciar",
+      "y proclamar tu gloria, tu nombre exaltar",
+      "Pues tú eres mi vida, mi inspiración",
+      "Que el mundo te conozca, es mi gran misión",
+      "Fui alcanzado por tu amor,<br>soy un testigo por donde voy",
+      "En cada calle, cada nación,<br>llevo tu gracia, tu salvación",
+      "Donde hay tinieblas quiero llegar,<br>con tu Palabra a libertar",
+      "Donde haya odio que lleve amor,<br>Viviendo siempre por ti, Señor",
+      "Estoy en este mundo para anunciar",
+      "y proclamar tu gloria, tu nombre exaltar",
+      "Pues tú eres mi vida, mi inspiración",
+      "Que el mundo te conozca, es mi gran misión",
+      "Maranata, maranata,<br>Ya muy pronto Jesús volverá",
+      "Estoy en este mundo para anunciar",
+      "y proclamar tu gloria, tu nombre exaltar",
+      "Pues tú eres mi vida, mi inspiración",
+      "Que el mundo te conozca, es mi gran misión",
+      "Estoy en este mundo para anunciar",
+      "y proclamar tu gloria, tu nombre exaltar",
+      "Pues tú eres mi vida, mi inspiración",
+      "Que el mundo te conozca, es mi gran misión"
+    ],
+    "coros": {
+      "principal": {
+        "inicio": 22,
+        "fin": 25
+      }
+    }
+  },
+  {
+    "id": 6,
     "titulo": "MI REFUGIO",
     "letra": [
       "MI REFUGIO",
@@ -35,8 +202,87 @@
     ],
     "coros": {
       "principal": {
-        "inicio": 24,
-        "fin": 27
+        "inicio": 25,
+        "fin": 28
+      }
+    }
+  },
+  {
+    "id": 7,
+    "titulo": "NUESTRA MISIÓN",
+    "letra": [
+      "NUESTRA MISIÓN",
+      "El llamado de Dios nos invita a vivir",
+      "El ejemplo dejado por Cristo Jesús",
+      "Reflejando el caracter, atributos de Dios",
+      "El amor, alegria, esperanza sin fin",
+      "Buscar, rescatar, amar, acoger<br>Esa es nuestra misión",
+      "Hablar y vivir, ser espejo, testificar<br>Esa es nuestra misión",
+      "Las tinieblas por siempre nos perseguirán",
+      "Pero nuestra bendita esperanza es mayor",
+      "Discípulos somos de un Dios poderoso",
+      "Que al mundo entero él puede abrazar",
+      "Buscar, rescatar, amar, acoger<br>Esa es nuestra misión",
+      "Hablar y vivir, ser espejo, testificar<br>Esa es nuestra misión",
+      "Id, id, esa es nuestra misión<br>Id, id, esa es nuestra misión",
+      "Id, id, esa es nuestra misión<br>Id, id, esa es nuestra misión",
+      "Buscar, rescatar, amar, acoger<br>Esa es nuestra misión",
+      "Hablar y vivir, ser espejo, testificar<br>Esa es nuestra misión",
+      "Esa es nuestra misión<br>Esa es nuestra misión"
+    ],
+    "coros": {
+      "principal": {
+        "inicio": 11,
+        "fin": 12
+      }
+    }
+  },
+  {
+    "id": 8,
+    "titulo": "TE ALABARÉ",
+    "letra": [
+      "TE ALABARÉ",
+      "Te Alabaré<br>Te Alabaré",
+      "Te Alabaré<br>Te Alabaré",
+      "A cada instante te adoraré",
+      "Y con mi vida gloria te daré",
+      "Yo quiero transformar mi corazón",
+      "Menos discurso y mucha más acción",
+      "Te Alabaré<br>Te Alabaré",
+      "Te Alabaré<br>Te Alabaré",
+      "Que mis palabras puedan construir",
+      "Y ti carácter puedan describir",
+      "Que lleve alivio donde hay dolor",
+      "Menos discurso y mucho más amor",
+      "Te Alabaré<br>Te Alabaré",
+      "Te Alabaré<br>Te Alabaré",
+      "Sea mi vida inspiración",
+      "Que haya en mí total consagración",
+      "Que sea el amor mi gran misión",
+      "Y en mí el evangelio se haga canción",
+      "Sea mi vida inspiración",
+      "Que haya en mí total consagración",
+      "Que sea el amor mi gran misión",
+      "Y en mí el evangelio se haga canción",
+      "Te Alabaré<br>Te Alabaré",
+      "Te Alabaré<br>Te Alabaré",
+      "A él sea la honra y toda la gloria",
+      "a él la majestad y todo poder",
+      "Se manifieste aquí la luz de tu presencia",
+      "Y viva Cristo en mí",
+      "A él sea la honra y toda la gloria",
+      "a él la majestad y todo poder",
+      "Se manifieste aquí la luz de tu presencia",
+      "Y viva Cristo en mí<br>Cristo en mí",
+      "Te Alabaré<br>Te Alabaré",
+      "Te Alabaré<br>Te Alabaré",
+      "Te Alabaré<br>Te Alabaré",
+      "Te Alabaré<br>Te Alabaré"
+    ],
+    "coros": {
+      "principal": {
+        "inicio": 35,
+        "fin": 36
       }
     }
   }
