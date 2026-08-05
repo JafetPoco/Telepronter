@@ -1,4 +1,4 @@
-// control.js - Versión corregida
+// control.js - Versión CORREGIDA con Tailwind
 const socket = io();
 let canciones = [];
 let cancionActual = 0;
@@ -111,11 +111,10 @@ socket.on('connect', () => {
 
 function actualizarUI() {
     if (!canciones.length || cancionActual >= canciones.length) {
-        // Actualizar elementos con valores por defecto
-        const titleElement = document.querySelector('.value');
+        const titleElement = document.querySelector('#currentSong .text-xl');
         if (titleElement) titleElement.textContent = 'Cargando...';
-        currentLineEl.textContent = 'Esperando datos...';
-        progressEl.textContent = 'Línea 0 de 0';
+        if (currentLineEl) currentLineEl.textContent = 'Esperando datos...';
+        if (progressEl) progressEl.textContent = 'Línea 0 de 0';
         if (percentageEl) percentageEl.textContent = '0%';
         if (progressFill) progressFill.style.width = '0%';
         return;
@@ -126,8 +125,7 @@ function actualizarUI() {
     const totalLineas = cancion.letra.length;
     const progreso = ((lineaActual + 1) / totalLineas) * 100;
     
-    // Actualizar elementos de forma segura
-    const titleElement = document.querySelector('.value');
+    const titleElement = document.querySelector('#currentSong .text-xl');
     if (titleElement) titleElement.textContent = cancion.titulo;
     
     if (currentLineEl) currentLineEl.textContent = linea;
@@ -140,19 +138,29 @@ function renderizarLista(searchTerm = '') {
     if (!songListEl) return;
     
     if (!canciones.length) {
-        songListEl.innerHTML = '<div style="text-align: center; padding: 40px;">📭 No hay canciones disponibles</div>';
+        songListEl.innerHTML = `
+            <div class="text-center py-10 text-slate-500">
+                <span class="text-4xl block mb-2">📭</span>
+                No hay canciones disponibles
+            </div>
+        `;
         return;
     }
     
     let filtradas = canciones;
     if (searchTerm) {
         filtradas = canciones.filter(cancion => 
-            cancion.titulo.toLowerCase().includes(searchTerm)
+            cancion.titulo.toLowerCase().includes(searchTerm.toLowerCase())
         );
     }
     
     if (filtradas.length === 0) {
-        songListEl.innerHTML = '<div style="text-align: center; padding: 40px;">🔍 No se encontraron canciones</div>';
+        songListEl.innerHTML = `
+            <div class="text-center py-10 text-slate-500">
+                <span class="text-4xl block mb-2">🔍</span>
+                No se encontraron canciones
+            </div>
+        `;
         return;
     }
     
@@ -161,27 +169,30 @@ function renderizarLista(searchTerm = '') {
         const isActive = originalIndex === cancionActual;
         
         return `
-            <div class="song-item ${isActive ? 'active' : ''}" data-index="${originalIndex}">
-                <div class="song-info-detail">
-                    <div class="song-title-item">${escapeHtml(cancion.titulo)}</div>
-                    <div class="song-meta">${cancion.letra.length} líneas</div>
-                </div>
-                <div class="song-status">
-                    ${isActive ? '<span class="playing-icon">▶</span>' : ''}
+            <div class="song-item ${isActive ? 'active' : ''} rounded-xl p-3 border ${isActive ? 'border-blue-500 bg-gradient-to-r from-blue-500/10 to-purple-500/10' : 'border-transparent hover:bg-slate-800/50'} transition-all duration-200 cursor-pointer" data-index="${originalIndex}">
+                <div class="flex items-center justify-between gap-3">
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-semibold ${isActive ? 'text-blue-400' : 'text-slate-300'} truncate">
+                            ${escapeHtml(cancion.titulo)}
+                        </div>
+                        <div class="text-xs ${isActive ? 'text-blue-300/70' : 'text-slate-500'}">
+                            ${cancion.letra.length} líneas
+                        </div>
+                    </div>
+                    ${isActive ? '<span class="text-blue-400 text-xs font-bold">▶</span>' : ''}
                 </div>
             </div>
         `;
     }).join('');
     
-    // Agregar eventos a cada canción
     document.querySelectorAll('.song-item').forEach(el => {
-        el.onclick = () => {
+        el.addEventListener('click', () => {
             const index = Number.parseInt(el.dataset.index, 10);
             if (!Number.isNaN(index) && index !== cancionActual) {
                 socket.emit('cambiar-cancion', index);
                 showToast(`📀 Cambiando a: ${canciones[index].titulo}`);
             }
-        };
+        });
     });
 }
 
@@ -189,17 +200,18 @@ function updateConnectionStatus(connected) {
     if (!connectionStatus) return;
     
     if (connected) {
-        connectionStatus.classList.add('connected');
         const span = connectionStatus.querySelector('span');
         if (span) span.textContent = 'Conectado';
+        const dot = connectionStatus.querySelector('.status-dot');
+        if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-emerald-400 status-dot';
     } else {
-        connectionStatus.classList.remove('connected');
         const span = connectionStatus.querySelector('span');
         if (span) span.textContent = 'Desconectado';
+        const dot = connectionStatus.querySelector('.status-dot');
+        if (dot) dot.className = 'w-2.5 h-2.5 rounded-full bg-red-400 status-dot';
     }
 }
 
-// Helper para escapar HTML
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
@@ -211,8 +223,21 @@ function showToast(message, type = 'info') {
     const toast = document.getElementById('toast');
     if (!toast) return;
     
-    toast.textContent = message;
-    toast.className = `toast ${type}`;
+    const icon = toast.querySelector('#toastIcon');
+    const msg = toast.querySelector('#toastMessage');
+    if (icon) {
+        if (message.includes('✅')) icon.textContent = '✅';
+        else if (message.includes('❌')) icon.textContent = '❌';
+        else if (message.includes('◀')) icon.textContent = '◀';
+        else if (message.includes('▶')) icon.textContent = '▶';
+        else if (message.includes('🎵')) icon.textContent = '🎵';
+        else if (message.includes('🖼️')) icon.textContent = '🖼️';
+        else if (message.includes('⟳')) icon.textContent = '⟳';
+        else if (message.includes('📀')) icon.textContent = '📀';
+        else icon.textContent = 'ℹ️';
+    }
+    if (msg) msg.textContent = message.replace(/[✅❌◀▶🎵🖼️⟳📀]/g, '').trim();
+    
     toast.classList.add('show');
     
     clearTimeout(toastTimeout);
@@ -221,10 +246,8 @@ function showToast(message, type = 'info') {
     }, 2000);
 }
 
-// Verificar conexión inicial
 setTimeout(() => {
     if (canciones.length === 0) {
         console.log('Esperando datos del servidor...');
-        showToast('Conectando al servidor...', 'info');
     }
 }, 1000);

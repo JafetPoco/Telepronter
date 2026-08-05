@@ -5,16 +5,25 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "css:build": "tailwindcss -i ./src/input.css -o ./public/css/style.css --minify",
+    "css:watch": "tailwindcss -i ./src/input.css -o ./public/css/style.css --watch"
   },
   "dependencies": {
     "express": "^4.18.2",
     "socket.io": "^4.5.4"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "autoprefixer": "^10.5.4",
+    "nodemon": "^3.0.1",
+    "postcss": "^8.5.25",
+    "tailwindcss": "^3.4.19"
   },
-  "keywords": ["teleprompter", "lyrics", "music"],
+  "keywords": [
+    "teleprompter",
+    "lyrics",
+    "music"
+  ],
   "author": "",
   "license": "MIT"
 }

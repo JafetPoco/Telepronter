@@ -99,6 +99,7 @@ io.on('connection', (socket) => {
 // Servir archivos estáticos
 app.use(express.static('public'));
 app.use('/videos', express.static('videos'));
+app.use(express.static(path.join(__dirname, 'public')));
 
 const networkInterfaces = require('node:os').networkInterfaces();
 

@@ -1,0 +1,91 @@
+.skeleton-item {
+    height: 56px;
+    background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* 2. Toast animation (no existe en Tailwind) */
+.toast {
+    left: 50%;
+    transform: translate(-50%, 16px);
+    max-width: min(560px, calc(100vw - 1rem));
+    width: max-content;
+    box-sizing: border-box;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast.show {
+    opacity: 1 !important;
+    transform: translate(-50%, 0) !important;
+}
+
+@media (max-width: 640px) {
+    .toast {
+        bottom: max(12px, env(safe-area-inset-bottom));
+        max-width: calc(100vw - 1rem);
+        min-width: 0;
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+}
+
+/* 3. Scrollbar personalizado (Tailwind no tiene) */
+.song-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.song-list::-webkit-scrollbar-track {
+    background: #1e293b;
+    border-radius: 10px;
+}
+
+.song-list::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 10px;
+}
+
+.song-list::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+/* 4. Punto de conexión animado (Tailwind no tiene animaciones personalizadas) */
+.status-dot {
+    animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+}
+
+/* 5. Gradiente de texto para línea actual (Tailwind no soporta texto con gradiente) */
+.current-line {
+    background: linear-gradient(120deg, #60a5fa 0%, #a78bfa 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* 6. Efecto active en botones (Tailwind no tiene :active con scale) */
+.control-btn:active {
+    transform: scale(0.95);
+}
