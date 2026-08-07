@@ -14,8 +14,7 @@ socket.on('estado-inicial', (estado) => {
   canciones = estado.canciones;
   modoPantalla = estado.modoPantalla || 'letras';
   actualizarPantalla(estado);
-  connectionStatus.textContent = '✅ Conectado';
-  connectionStatus.style.color = 'rgba(100, 255, 100, 0.8)';
+  updateConnectionStatus(true);
 });
 
 // Actualización desde el control
@@ -64,14 +63,31 @@ function aplicarModoPantalla(modo) {
   }
 }
 
+function updateConnectionStatus(connected) {
+  const dot = connectionStatus?.querySelector('.status-dot');
+  const text = connectionStatus?.querySelector('span:last-child');
+  
+  if (connected) {
+    if (dot) dot.className = 'status-dot w-2 h-2 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50';
+    if (text) text.textContent = 'Conectado';
+    if (connectionStatus) {
+      connectionStatus.className = 'status-badge fixed top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-full shadow-xl shadow-black/30 connected';
+    }
+  } else {
+    if (dot) dot.className = 'status-dot w-2 h-2 rounded-full bg-red-400 shadow-lg shadow-red-400/50';
+    if (text) text.textContent = 'Desconectado';
+    if (connectionStatus) {
+      connectionStatus.className = 'status-badge fixed top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-full shadow-xl shadow-black/30 disconnected';
+    }
+  }
+}
+
 // Manejo de desconexión
 socket.on('disconnect', () => {
-  connectionStatus.textContent = '⚠️ Desconectado';
-  connectionStatus.style.color = 'rgba(255, 100, 100, 0.8)';
+  updateConnectionStatus(false);
   lyricDisplay.textContent = 'Esperando conexión...';
 });
 
 socket.on('connect', () => {
-  connectionStatus.textContent = '✅ Conectado';
-  connectionStatus.style.color = 'rgba(100, 255, 100, 0.8)';
+  updateConnectionStatus(true);
 });

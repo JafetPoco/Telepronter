@@ -1,0 +1,183 @@
+/* ===== screen.css - Estilos personalizados para la pantalla ===== */
+
+/* Video de fondo */
+#video-bg {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -2;
+  object-fit: cover;
+}
+
+/* Overlay oscuro sobre el video */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+/* Letras grandes con efecto neón */
+#lyricDisplay {
+  font-size: clamp(1.4rem, 3.2vw, 3.8rem);
+  line-height: 1.25;
+  text-shadow: 
+    0 0 20px rgba(96, 165, 250, 0.3),
+    0 0 60px rgba(96, 165, 250, 0.1),
+    0 4px 20px rgba(0, 0, 0, 0.5);
+  transition: all 0.5s ease;
+  word-break: break-word;
+}
+
+/* Animación de entrada de letras */
+@keyframes fadeSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lyric-text {
+  animation: fadeSlideUp 0.5s ease-out;
+}
+
+/* Badge de estado */
+.status-badge {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(71, 85, 105, 0.5);
+}
+
+/* Punto de conexión animado */
+.status-dot {
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* Animación de la imagen principal */
+.main-image {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: drop-shadow(0 0 40px rgba(96, 165, 250, 0.15));
+  opacity: 0;
+  transform: scale(1.02);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+/* Modo principal - imagen */
+.main-view {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+  z-index: 1;
+}
+
+.main-view.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.main-view.active .main-image {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@keyframes subtlePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.95; }
+}
+
+/* Contenedor de letras */
+.lyric-container {
+  backdrop-filter: blur(5px);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.lyric-container.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Estado de conexión en el badge */
+#connectionStatus.connected {
+  border-color: rgba(52, 211, 153, 0.3);
+}
+
+#connectionStatus.disconnected {
+  border-color: rgba(248, 113, 113, 0.3);
+}
+
+/* Modo oscuro para el body */
+body[data-view="principal"] .lyric-container {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+body[data-view="principal"] .main-view {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+body[data-view="letras"] .main-view {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+body[data-view="letras"] .lyric-container {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  #lyricDisplay {
+    font-size: clamp(1.6rem, 4.6vw, 2.5rem);
+    line-height: 1.2;
+  }
+  
+  .lyric-container {
+    padding: 1.5rem 1rem !important;
+    border-radius: 1.5rem !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  #lyricDisplay {
+    font-size: clamp(4rem, 2.3vw, 7.2rem);
+  }
+}

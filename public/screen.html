@@ -1,33 +1,53 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Teleprompter - Pantalla</title>
-    <link rel="stylesheet" href="screen.css">
-  </head>
-  <body>
-    <video id="video-bg" autoplay muted loop>
-      <source src="/videos/fondo.mp4" type="video/mp4">
-      Tu navegador no soporta video de fondo.
-    </video>
-    <div class="overlay"></div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Teleprompter - Pantalla</title>
+  <link href="/css/style.css" rel="stylesheet">
+  <link href="/css/screen.css" rel="stylesheet">
+</head>
 
-    <div class="screen-scene" id="screenScene">
-      <div class="main-view" id="mainView" aria-hidden="true">
-        <img class="main-image" src="/videos/principal.png" alt="Vista principal del teleprompter">
-      </div>
+<body class="bg-slate-900 min-h-screen overflow-hidden font-sans antialiased">
 
-      <div class="lyric-container" id="lyricContainer">
-        <div class="lyric-text" id="lyricDisplay">Cargando...</div>
+  <!-- VIDEO DE FONDO -->
+  <video id="video-bg" autoplay muted loop playsinline>
+    <source src="/videos/fondo.mp4" type="video/mp4">
+    Tu navegador no soporta video de fondo.
+  </video>
+  
+  <!-- OVERLAY OSCURO -->
+  <div class="overlay bg-gradient-to-b from-slate-950/50 via-slate-900/30 to-slate-950/50"></div>
+
+  <!-- ===== CONTENIDO PRINCIPAL ===== -->
+  <div class="relative z-10 min-h-screen flex flex-col items-center justify-center px-4 py-8">
+    
+    <!-- VISTA PRINCIPAL (imagen) -->
+    <div id="mainView" class="main-view flex items-center justify-center w-full h-full">
+      <img class="main-image" src="/videos/principal.png" alt="Vista principal del teleprompter">
+    </div>
+
+    <!-- CONTENEDOR DE LETRAS -->
+    <div id="lyricContainer" class="lyric-container w-full max-w-6xl mx-auto rounded-3xl px-6 md:px-12 py-8 md:py-16 text-center bg-black/35">
+      <div id="lyricDisplay" class="lyric-text text-white font-bold tracking-wide">
+        Cargando...
       </div>
     </div>
 
-    <div class="song-info" id="songInfo"></div>
-    <div class="connection-status" id="connectionStatus">Conectando...</div>
+    <!-- INFO DE LA CANCIÓN (abajo, sutil) -->
+    <div id="songInfo" class="fixed bottom-6 left-1/2 -translate-x-1/2 text-center text-slate-400/60 text-sm font-medium tracking-wider uppercase">
+      Esperando canción...
+    </div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="screen.js"></script>
+    <!-- ESTADO DE CONEXIÓN (esquina superior derecha) -->
+    <div id="connectionStatus" class="status-badge fixed top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-full shadow-xl shadow-black/30">
+      <span class="status-dot w-2 h-2 rounded-full bg-emerald-400 shadow-lg shadow-emerald-400/50"></span>
+      <span class="text-xs font-medium text-slate-300">Conectado</span>
+    </div>
+  </div>
 
-  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="screen.js"></script>
+
+</body>
 </html>
