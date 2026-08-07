@@ -3,10 +3,13 @@ const http = require('node:http');
 const socketIO = require('socket.io');
 const path = require('node:path');
 const fs = require('node:fs');
+const LetrasScraper = require('./public/scraper');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
+
+const scraper = new LetrasScraper();
 
 // Estado del teleprompter
 let estado = {
@@ -94,12 +97,42 @@ io.on('connection', (socket) => {
     estado.modoPantalla = 'principal';
     io.emit('actualizar-estado', estado);
   });
+
+  socket.on('buscar-letra', async (data) => {
+    const { artista, cancion } = data;
+    
+    if (!artista || !cancion) {
+      socket.emit('busqueda-resultado', {
+        exito: false,
+        mensaje: 'Faltan datos'
+      });
+      return;
+    }
+
+    try {
+      const resultado = await scraper.buscarLetra(artista, cancion);
+      socket.emit('busqueda-resultado', resultado);
+    } catch (error) {
+      socket.emit('busqueda-resultado', {
+        exito: false,
+        mensaje: 'Error al buscar: ' + error.message
+      });
+    }
+  });
 });
 
 // Servir archivos estáticos
 app.use(express.static('public'));
 app.use('/videos', express.static('videos'));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Ruta API para buscar (alternativa HTTP)
+app.use(express.json());
+
+// Ruta para obtener canciones
+app.get('/api/canciones', (req, res) => {
+  res.json(estado.canciones);
+});
 
 const networkInterfaces = require('node:os').networkInterfaces();
 

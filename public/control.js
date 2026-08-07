@@ -43,15 +43,15 @@ document.getElementById('btnReset').onclick = () => {
 
 // Atajos de teclado
 document.addEventListener('keydown', (e) => {
-    switch(e.key) {
-        case 'ArrowLeft': 
+    switch (e.key) {
+        case 'ArrowLeft':
             document.getElementById('btnPrev').click();
             break;
-        case 'ArrowRight': 
+        case 'ArrowRight':
             document.getElementById('btnNext').click();
             break;
         case 'c':
-        case 'C': 
+        case 'C':
             document.getElementById('btnCoro').click();
             break;
         case 'v':
@@ -59,7 +59,7 @@ document.addEventListener('keydown', (e) => {
             document.getElementById('btnPrincipal').click();
             break;
         case 'r':
-        case 'R': 
+        case 'R':
             document.getElementById('btnReset').click();
             break;
     }
@@ -79,11 +79,11 @@ socket.on('estado-inicial', (estado) => {
     canciones = estado.canciones;
     cancionActual = estado.cancionActual;
     lineaActual = estado.lineaActual;
-    
+
     actualizarUI();
     renderizarLista();
     updateConnectionStatus(true);
-    
+
     if (songCountEl) {
         songCountEl.textContent = `${canciones.length} ${canciones.length === 1 ? 'canción' : 'canciones'}`;
     }
@@ -94,7 +94,7 @@ socket.on('actualizar-estado', (estado) => {
     canciones = estado.canciones;
     cancionActual = estado.cancionActual;
     lineaActual = estado.lineaActual;
-    
+
     actualizarUI();
     renderizarLista();
 });
@@ -119,15 +119,15 @@ function actualizarUI() {
         if (progressFill) progressFill.style.width = '0%';
         return;
     }
-    
+
     const cancion = canciones[cancionActual];
     const linea = cancion.letra[lineaActual] || '...';
     const totalLineas = cancion.letra.length;
     const progreso = ((lineaActual + 1) / totalLineas) * 100;
-    
+
     const titleElement = document.querySelector('#currentSong .text-xl');
     if (titleElement) titleElement.textContent = cancion.titulo;
-    
+
     if (currentLineEl) currentLineEl.textContent = linea;
     if (progressEl) progressEl.textContent = `Línea ${lineaActual + 1} de ${totalLineas}`;
     if (percentageEl) percentageEl.textContent = `${Math.round(progreso)}%`;
@@ -136,7 +136,7 @@ function actualizarUI() {
 
 function renderizarLista(searchTerm = '') {
     if (!songListEl) return;
-    
+
     if (!canciones.length) {
         songListEl.innerHTML = `
             <div class="text-center py-10 text-slate-500">
@@ -146,14 +146,14 @@ function renderizarLista(searchTerm = '') {
         `;
         return;
     }
-    
+
     let filtradas = canciones;
     if (searchTerm) {
-        filtradas = canciones.filter(cancion => 
+        filtradas = canciones.filter(cancion =>
             cancion.titulo.toLowerCase().includes(searchTerm.toLowerCase())
         );
     }
-    
+
     if (filtradas.length === 0) {
         songListEl.innerHTML = `
             <div class="text-center py-10 text-slate-500">
@@ -163,11 +163,11 @@ function renderizarLista(searchTerm = '') {
         `;
         return;
     }
-    
+
     songListEl.innerHTML = filtradas.map((cancion, idx) => {
         const originalIndex = canciones.findIndex(c => c.id === cancion.id);
         const isActive = originalIndex === cancionActual;
-        
+
         return `
             <div class="song-item ${isActive ? 'active' : ''} rounded-xl p-3 border ${isActive ? 'border-blue-500 bg-gradient-to-r from-blue-500/10 to-purple-500/10' : 'border-transparent hover:bg-slate-800/50'} transition-all duration-200 cursor-pointer" data-index="${originalIndex}">
                 <div class="flex items-center justify-between gap-3">
@@ -184,7 +184,7 @@ function renderizarLista(searchTerm = '') {
             </div>
         `;
     }).join('');
-    
+
     document.querySelectorAll('.song-item').forEach(el => {
         el.addEventListener('click', () => {
             const index = Number.parseInt(el.dataset.index, 10);
@@ -198,7 +198,7 @@ function renderizarLista(searchTerm = '') {
 
 function updateConnectionStatus(connected) {
     if (!connectionStatus) return;
-    
+
     if (connected) {
         const span = connectionStatus.querySelector('span');
         if (span) span.textContent = 'Conectado';
@@ -222,7 +222,7 @@ let toastTimeout;
 function showToast(message, type = 'info') {
     const toast = document.getElementById('toast');
     if (!toast) return;
-    
+
     const icon = toast.querySelector('#toastIcon');
     const msg = toast.querySelector('#toastMessage');
     if (icon) {
@@ -237,17 +237,38 @@ function showToast(message, type = 'info') {
         else icon.textContent = 'ℹ️';
     }
     if (msg) msg.textContent = message.replace(/[✅❌◀▶🎵🖼️⟳📀]/g, '').trim();
-    
+
     toast.classList.add('show');
-    
+
     clearTimeout(toastTimeout);
     toastTimeout = setTimeout(() => {
         toast.classList.remove('show');
     }, 2000);
 }
 
+function buscarYAgregar() {
+    const artista = document.getElementById('artistaBuscar').value.trim();
+    const cancion = document.getElementById('cancionBuscar').value.trim();
+
+    if (!artista || !cancion) {
+        document.getElementById('resultadoBusqueda').innerHTML =
+            '⚠️ Ingresa artista y canción';
+        document.getElementById('resultadoBusqueda').className = 'mt-3 text-sm text-yellow-400';
+        return;
+    }
+
+    socket.emit('buscar-letra', { artista, cancion });
+}
+
+// Enter para buscar
+document.getElementById('cancionBuscar').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') buscarYAgregar();
+});
+
 setTimeout(() => {
     if (canciones.length === 0) {
         console.log('Esperando datos del servidor...');
     }
 }, 1000);
+
+
