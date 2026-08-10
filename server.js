@@ -119,6 +119,29 @@ io.on('connection', (socket) => {
       });
     }
   });
+
+  socket.on('extraer-letra', async (link) => {
+    if (!link) {
+        socket.emit('resultado-busqueda', {
+            exito: false,
+            mensaje: 'Ingresa un link válido para buscar',
+            resultados: []
+        });
+        return;
+    }
+
+    try {
+        const resultado = await scraper.extraerLetra(link);
+        socket.emit('resultado-busqueda', resultado);
+    } catch (error) {
+        socket.emit('resultado-busqueda', {
+            exito: false,
+            mensaje: 'Error al buscar: ' + error.message,
+            resultados: []
+        });
+    }
+});
+
 });
 
 // Servir archivos estáticos

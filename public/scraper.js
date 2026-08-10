@@ -9,26 +9,65 @@ class LetrasScraper {
         this.cancionesPath = path.join(this.dataDir, 'canciones.json');
     }
 
+    async extraerLetra(url) {
+        try {
+            const urlFinal = typeof url === 'string' ? url.trim() : '';
+
+            if (!urlFinal) {
+                return {
+                    exito: false,
+                    mensaje: 'No se recibió una URL válida'
+                };
+            }
+
+            console.log(`🔍 Buscando: ${urlFinal}`);
+
+            const response = await axios.get(urlFinal, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+                },
+                timeout: 15000
+            });
+
+            if (response.status === 200) {
+                const letra = this.extraerLetrasCom(response.data);
+                console.log('Letra extraída:', letra);
+
+                if (letra && letra.length > 50) {
+                    return {
+                        exito: true,
+                        letra: letra,
+                        fuente: new URL(urlFinal).hostname
+                    };
+                }
+            }
+
+            return {
+                exito: false,
+                mensaje: 'No se pudo acceder a la búsqueda'
+            };
+        } catch (error) {
+            console.error('Error al extraer:', error);
+            return {
+                exito: false,
+                mensaje: 'Error al Estraer: ' + error.message
+            };
+        }
+    }
+
     // Buscar letra en diferentes fuentes
     async buscarLetra(artista, cancion) {
         try {
             // Limpiar texto para URL
             const artistaClean = artista.toLowerCase().trim().replace(/\s+/g, '-');
             const cancionClean = cancion.toLowerCase().trim().replace(/\s+/g, '-');
-            
+
             // Fuentes de búsqueda
             const fuentes = [
                 {
                     url: `https://www.letras.com/${artistaClean}/${cancionClean}/`,
                     extractor: this.extraerLetrasCom.bind(this)
-                },
-                {
-                    url: `https://www.letras.mus.br/${artistaClean}/${cancionClean}/`,
-                    extractor: this.extraerLetrasMusBr.bind(this)
-                },
-                {
-                    url: `https://www.musica.com/letras.asp?letra=${encodeURIComponent(cancion)}&artista=${encodeURIComponent(artista)}`,
-                    extractor: this.extraerMusicaCom.bind(this)
                 }
             ];
 
@@ -78,7 +117,7 @@ class LetrasScraper {
     extraerLetrasCom(html) {
         const $ = cheerio.load(html);
         let letra = '';
-        
+
         $('.lyric-original, .letra, .lyrics, .cnt-letra p').each((i, el) => {
             const texto = $(el).html() || '';
             if (texto && texto.length > 10) {
@@ -87,36 +126,6 @@ class LetrasScraper {
         });
 
         console.log(this.limpiarLetra(letra));
-    }
-
-    // Extractor para letras.mus.br
-    extraerLetrasMusBr(html) {
-        const $ = cheerio.load(html);
-        let letra = '';
-        
-        $('.cnt-letra p, .lyrics p, .letra p').each((i, el) => {
-            const texto = $(el).html() || '';
-            if (texto && texto.length > 10) {
-                letra += texto.replace(/<br\s*\/?>/gi, '\n') + '\n';
-            }
-        });
-
-        return this.limpiarLetra(letra);
-    }
-
-    // Extractor para musica.com
-    extraerMusicaCom(html) {
-        const $ = cheerio.load(html);
-        let letra = '';
-        
-        $('.letra, .lyrics, .song-text').each((i, el) => {
-            const texto = $(el).html() || '';
-            if (texto && texto.length > 10) {
-                letra += texto.replace(/<br\s*\/?>/gi, '\n') + '\n';
-            }
-        });
-
-        return this.limpiarLetra(letra);
     }
 
     // Limpiar la letra
@@ -139,7 +148,7 @@ class LetrasScraper {
     procesarLetraParaTeleprompter(letra, artista, cancion) {
         // Dividir en líneas
         const lineas = letra.split('\n').filter(line => line.trim().length > 0);
-        
+
         // Crear estructura para el teleprompter
         return {
             titulo: cancion,
@@ -190,8 +199,8 @@ class LetrasScraper {
             }
 
             // Verificar si la canción ya existe
-            const exists = canciones.some(c => 
-                c.titulo.toLowerCase() === cancion.toLowerCase() && 
+            const exists = canciones.some(c =>
+                c.titulo.toLowerCase() === cancion.toLowerCase() &&
                 c.artista.toLowerCase() === artista.toLowerCase()
             );
 
@@ -227,7 +236,7 @@ class LetrasScraper {
     async buscarYGuardar(artista, cancion) {
         // Buscar la letra
         const resultado = await this.buscarLetra(artista, cancion);
-        
+
         if (!resultado.exito) {
             return resultado;
         }

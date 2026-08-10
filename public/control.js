@@ -260,6 +260,19 @@ function buscarYAgregar() {
     socket.emit('buscar-letra', { artista, cancion });
 }
 
+function extraerLetra() {
+    const input = document.getElementById('linkLetra');
+    const link = input ? input.value.trim() : '';
+
+    if (!link) {
+        showToast('⚠️ Ingresa un link de letra', 'warning');
+        return;
+    }
+
+    socket.emit('extraer-letra', link);
+    showToast('Buscando letra...', 'info');
+}
+
 // Enter para buscar
 document.getElementById('cancionBuscar').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') buscarYAgregar();
