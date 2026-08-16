@@ -1,9 +1,9 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const fs = require('fs').promises;
-const path = require('path');
+const fs = require('node:fs').promises;
+const path = require('node:path');
 
-class LetrasScraper {
+class ScraperService {
     constructor() {
         this.dataDir = path.join(__dirname, 'data');
         this.cancionesPath = path.join(this.dataDir, 'canciones.json');
@@ -59,7 +59,7 @@ class LetrasScraper {
             const urlObj = new URL(url);
             const pathname = urlObj.pathname;
             const partes = pathname.split('/').filter(Boolean);
-            
+
             if (partes.length >= 2) {
                 // Tomar la última parte de la URL y reemplazar guiones por espacios
                 const titulo = partes[partes.length - 1].replace(/-/g, ' ');
@@ -158,116 +158,6 @@ class LetrasScraper {
             .replace(/\s*\n\s*/g, '\n')
             .trim();
     }
-
-    // Procesar letra para el teleprompter
-    procesarLetraParaTeleprompter(letra, artista, cancion) {
-        // Dividir en líneas
-        const lineas = letra.split('\n').filter(line => line.trim().length > 0);
-
-        // Crear estructura para el teleprompter
-        return {
-            titulo: cancion,
-            artista: artista,
-            letra: lineas,
-            // Detectar posibles coros (opcional)
-            coros: this.detectarCoros(lineas)
-        };
-    }
-
-    // Detectar coros (versión simple)
-    detectarCoros(lineas) {
-        // Buscar patrones de repetición
-        const coros = {
-            principal: {
-                inicio: 0,
-                fin: 0
-            }
-        };
-
-        // Si hay más de 3 líneas, buscar el coro en la posición 1/3 de la canción
-        if (lineas.length > 10) {
-            const inicioCoro = Math.floor(lineas.length * 0.3);
-            const finCoro = Math.floor(lineas.length * 0.5);
-            coros.principal.inicio = inicioCoro;
-            coros.principal.fin = finCoro;
-        }
-
-        return coros;
-    }
-
-    // Guardar canción en el archivo JSON
-    async guardarCancion(artista, cancion, letra) {
-        try {
-            // Asegurar que el directorio data existe
-            await fs.mkdir(this.dataDir, { recursive: true });
-
-            // Procesar letra para el teleprompter
-            const cancionData = this.procesarLetraParaTeleprompter(letra, artista, cancion);
-
-            // Cargar canciones existentes
-            let canciones = [];
-            try {
-                const data = await fs.readFile(this.cancionesPath, 'utf8');
-                canciones = JSON.parse(data);
-            } catch (error) {
-                // Archivo no existe, comenzar con array vacío
-            }
-
-            // Verificar si la canción ya existe
-            const exists = canciones.some(c =>
-                c.titulo.toLowerCase() === cancion.toLowerCase() &&
-                c.artista.toLowerCase() === artista.toLowerCase()
-            );
-
-            if (exists) {
-                return {
-                    exito: false,
-                    mensaje: 'La canción ya existe en el teleprompter'
-                };
-            }
-
-            // Agregar nueva canción
-            canciones.push(cancionData);
-
-            // Guardar archivo
-            await fs.writeFile(this.cancionesPath, JSON.stringify(canciones, null, 2), 'utf8');
-
-            return {
-                exito: true,
-                mensaje: 'Canción agregada exitosamente',
-                cancion: cancionData,
-                index: canciones.length - 1
-            };
-        } catch (error) {
-            console.error('Error guardando canción:', error);
-            return {
-                exito: false,
-                mensaje: 'Error al guardar la canción'
-            };
-        }
-    }
-
-    // Buscar y guardar en un solo paso
-    async buscarYGuardar(artista, cancion) {
-        // Buscar la letra
-        const resultado = await this.buscarLetra(artista, cancion);
-
-        if (!resultado.exito) {
-            return resultado;
-        }
-
-        // Guardar la canción
-        const guardado = await this.guardarCancion(
-            resultado.artista,
-            resultado.cancion,
-            resultado.letra
-        );
-
-        return {
-            ...resultado,
-            ...guardado
-        };
-    }
 }
 
-module.exports = LetrasScraper;
+module.exports = new ScraperService();

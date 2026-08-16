@@ -4,9 +4,7 @@ const socket = io();
 // Elementos DOM
 const form = document.getElementById('songForm');
 const titleInput = document.getElementById('songTitle');
-const artistInput = document.getElementById('songArtist');
 const lyricsInput = document.getElementById('songLyrics');
-const tagsInput = document.getElementById('songTags');
 const lineNumbersDiv = document.getElementById('lineNumbers');
 
 const getInputValue = (input) => input ? input.value.trim() : '';
@@ -93,9 +91,7 @@ function guardarCancion(event) {
     event.preventDefault();
 
     const titulo = getInputValue(titleInput);
-    const artista = getInputValue(artistInput);
     const letra = getInputValue(lyricsInput);
-    const tags = getInputValue(tagsInput);
 
     // Validaciones
     if (!titulo) {
@@ -123,10 +119,7 @@ function guardarCancion(event) {
     const cancion = {
         id: Date.now(),
         titulo: titulo,
-        artista: artista || 'Desconocido',
-        letra: lineas,
-        tags: tags ? tags.split(',').map(t => t.trim()).filter(t => t) : [],
-        fechaCreacion: new Date().toISOString()
+        letra: lineas
     };
 
     console.log('📀 Canción guardada:', cancion);
@@ -142,8 +135,7 @@ function guardarCancion(event) {
     submitBtn.classList.add('save-success');
     setTimeout(() => submitBtn.classList.remove('save-success'), 500);
 
-    // Limpiar campos si quieres
-    // limpiarFormulario();
+    limpiarFormulario();
 
     return false;
 }
@@ -153,9 +145,7 @@ function limpiarFormulario() {
     if (!confirm('¿Estás seguro de que quieres limpiar todos los campos?')) return;
 
     if (titleInput) titleInput.value = '';
-    if (artistInput) artistInput.value = '';
     if (lyricsInput) lyricsInput.value = '';
-    if (tagsInput) tagsInput.value = '';
 
     // Resetear contadores y vista previa
     if (titleInput) titleInput.focus();
