@@ -7,10 +7,9 @@ const titleInput = document.getElementById('songTitle');
 const artistInput = document.getElementById('songArtist');
 const lyricsInput = document.getElementById('songLyrics');
 const tagsInput = document.getElementById('songTags');
-const lineCountSpan = document.getElementById('lineCountNumber');
-const previewTitle = document.getElementById('previewTitle');
-const previewFirstLine = document.getElementById('previewFirstLine');
 const lineNumbersDiv = document.getElementById('lineNumbers');
+
+const getInputValue = (input) => input ? input.value.trim() : '';
 
 
 let toastTimeout;
@@ -40,23 +39,6 @@ function showToast(message, type = 'info') {
         toast.classList.remove('show');
     }, 2000);
 }
-
-// Actualizar contador de líneas y vista previa en tiempo real
-lyricsInput.addEventListener('input', function () {
-    const lines = this.value.split('\n').filter(line => line.trim() !== '');
-    lineCountSpan.textContent = lines.length;
-
-    // Actualizar vista previa
-    const firstLine = lines[0] || 'La letra aparecerá aquí...';
-    previewFirstLine.textContent = firstLine;
-
-});
-
-// Actualizar vista previa del título
-titleInput.addEventListener('input', function () {
-    previewTitle.textContent = this.value || 'Título de la canción';
-});
-
 
 // ==== SCRAPER DE LETRASS ====
 function buscarPorNombre() {
@@ -110,10 +92,10 @@ lyricsInput.addEventListener('scroll', function () {
 function guardarCancion(event) {
     event.preventDefault();
 
-    const titulo = titleInput.value.trim();
-    const artista = artistInput.value.trim();
-    const letra = lyricsInput.value.trim();
-    const tags = tagsInput.value.trim();
+    const titulo = getInputValue(titleInput);
+    const artista = getInputValue(artistInput);
+    const letra = getInputValue(lyricsInput);
+    const tags = getInputValue(tagsInput);
 
     // Validaciones
     if (!titulo) {
@@ -170,16 +152,13 @@ function guardarCancion(event) {
 function limpiarFormulario() {
     if (!confirm('¿Estás seguro de que quieres limpiar todos los campos?')) return;
 
-    titleInput.value = '';
-    artistInput.value = '';
-    lyricsInput.value = '';
-    tagsInput.value = '';
+    if (titleInput) titleInput.value = '';
+    if (artistInput) artistInput.value = '';
+    if (lyricsInput) lyricsInput.value = '';
+    if (tagsInput) tagsInput.value = '';
 
     // Resetear contadores y vista previa
-    lineCountSpan.textContent = '0';
-    previewTitle.textContent = 'Título de la canción';
-    previewFirstLine.textContent = 'La letra aparecerá aquí...';
-    titleInput.focus();
+    if (titleInput) titleInput.focus();
     mostrarToast('🗑️', 'Formulario limpiado', 'info');
 }
 

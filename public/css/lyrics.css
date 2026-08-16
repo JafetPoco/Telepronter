@@ -5,6 +5,7 @@
     font-family: 'Courier New', monospace;
     line-height: 1.8;
     tab-size: 2;
+    padding-left: 18px !important;
 }
 
 .song-textarea:focus {
@@ -39,9 +40,7 @@
     opacity: 0.5;
 }
 
-.song-textarea {
-    padding-left: 48px !important;
-}
+
 
 /* Scroll personalizado */
 .song-textarea::-webkit-scrollbar {
