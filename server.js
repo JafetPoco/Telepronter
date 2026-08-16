@@ -102,20 +102,22 @@ io.on('connection', (socket) => {
     const { artista, cancion } = data;
     
     if (!artista || !cancion) {
-      socket.emit('busqueda-resultado', {
+      socket.emit('resultado-busqueda', {
         exito: false,
-        mensaje: 'Faltan datos'
+        mensaje: 'Faltan datos',
+        resultados: []
       });
       return;
     }
 
     try {
       const resultado = await scraper.buscarLetra(artista, cancion);
-      socket.emit('busqueda-resultado', resultado);
+      socket.emit('resultado-busqueda', resultado);
     } catch (error) {
-      socket.emit('busqueda-resultado', {
+      socket.emit('resultado-busqueda', {
         exito: false,
-        mensaje: 'Error al buscar: ' + error.message
+        mensaje: 'Error al buscar: ' + error.message,
+        resultados: []
       });
     }
   });

@@ -88,7 +88,7 @@
             <input type="text" id="cancionBuscar" placeholder="Canción"
               class="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-slate-900/80 border border-slate-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/50 transition-all text-sm font-medium text-slate-300 placeholder:text-slate-500">
           </div>
-          <button onclick="buscarYAgregar()"
+          <button onclick="buscarPorNombre()"
             class="bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-2.5 sm:py-3 px-4 sm:px-6 rounded-xl shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all duration-300 transform hover:scale-[1.02] flex items-center justify-center gap-2">
             <span>🔍</span> Buscar
           </button>
@@ -142,18 +142,11 @@
             <label for="songLyrics" class="block text-sm font-medium text-slate-300">
               📝 Letra de la canción <span class="text-rose-400">*</span>
             </label>
-            <span id="lineCount"
-              class="text-xs text-slate-500 bg-slate-900/50 px-3 py-1 rounded-full border border-slate-700/30">
-              Líneas: <span id="lineCountNumber">0</span>
-            </span>
           </div>
 
           <div class="textarea-wrapper relative">
-            <div id="lineNumbers" class="line-numbers hidden sm:block">
-              1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>
-            </div>
             <textarea id="songLyrics" rows="12" required placeholder="Pega o escribe aquí la letra de la canción..."
-              class="song-textarea w-full px-4 py-3 bg-slate-900/80 border border-slate-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/50 transition-all text-sm text-slate-200 placeholder:text-slate-500"></textarea>
+              class="song-textarea w-full px-2 py-3 bg-slate-900/80 border border-slate-700/50 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500/50 transition-all text-sm text-slate-200 placeholder:text-slate-500"></textarea>
           </div>
           <p class="mt-1 text-xs text-slate-500">Cada línea será mostrada individualmente en la pantalla del
             teleprompter</p>

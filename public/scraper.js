@@ -20,8 +20,6 @@ class LetrasScraper {
                 };
             }
 
-            console.log(`🔍 Buscando: ${urlFinal}`);
-
             const response = await axios.get(urlFinal, {
                 headers: {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -32,11 +30,11 @@ class LetrasScraper {
 
             if (response.status === 200) {
                 const letra = this.extraerLetrasCom(response.data);
-                console.log('Letra extraída:', letra);
 
                 if (letra && letra.length > 50) {
                     return {
                         exito: true,
+                        titulo: this.extraerTituloDeUrl(urlFinal),
                         letra: letra,
                         fuente: new URL(urlFinal).hostname
                     };
@@ -53,6 +51,25 @@ class LetrasScraper {
                 exito: false,
                 mensaje: 'Error al Estraer: ' + error.message
             };
+        }
+    }
+
+    extraerTituloDeUrl(url) {
+        try {
+            const urlObj = new URL(url);
+            const pathname = urlObj.pathname;
+            const partes = pathname.split('/').filter(Boolean);
+            
+            if (partes.length >= 2) {
+                // Tomar la última parte de la URL y reemplazar guiones por espacios
+                const titulo = partes[partes.length - 1].replace(/-/g, ' ');
+                // Decodificar caracteres especiales y capitalizar
+                return decodeURIComponent(titulo).replace(/\b\w/g, l => l.toUpperCase());
+            }
+            return 'Título no disponible';
+        } catch (error) {
+            console.error('Error al extraer título de URL:', error);
+            return 'Título no disponible';
         }
     }
 
@@ -73,7 +90,6 @@ class LetrasScraper {
 
             for (const fuente of fuentes) {
                 try {
-                    console.log(`🔍 Intentando: ${fuente.url}`);
                     const response = await axios.get(fuente.url, {
                         headers: {
                             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -87,10 +103,9 @@ class LetrasScraper {
                         if (letra && letra.length > 50) {
                             return {
                                 exito: true,
+                                titulo: cancion,
                                 letra: letra,
-                                fuente: new URL(fuente.url).hostname,
-                                artista: artista,
-                                cancion: cancion
+                                fuente: new URL(fuente.url).hostname
                             };
                         }
                     }
@@ -125,7 +140,7 @@ class LetrasScraper {
             }
         });
 
-        console.log(this.limpiarLetra(letra));
+        return this.limpiarLetra(letra);
     }
 
     // Limpiar la letra

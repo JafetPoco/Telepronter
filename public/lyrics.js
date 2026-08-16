@@ -12,6 +12,35 @@ const previewTitle = document.getElementById('previewTitle');
 const previewFirstLine = document.getElementById('previewFirstLine');
 const lineNumbersDiv = document.getElementById('lineNumbers');
 
+
+let toastTimeout;
+function showToast(message, type = 'info') {
+    const toast = document.getElementById('toast');
+    if (!toast) return;
+
+    const icon = toast.querySelector('#toastIcon');
+    const msg = toast.querySelector('#toastMessage');
+    if (icon) {
+        if (message.includes('✅')) icon.textContent = '✅';
+        else if (message.includes('❌')) icon.textContent = '❌';
+        else if (message.includes('◀')) icon.textContent = '◀';
+        else if (message.includes('▶')) icon.textContent = '▶';
+        else if (message.includes('🎵')) icon.textContent = '🎵';
+        else if (message.includes('🖼️')) icon.textContent = '🖼️';
+        else if (message.includes('⟳')) icon.textContent = '⟳';
+        else if (message.includes('📀')) icon.textContent = '📀';
+        else icon.textContent = 'ℹ️';
+    }
+    if (msg) msg.textContent = message.replace(/[✅❌◀▶🎵🖼️⟳📀]/g, '').trim();
+
+    toast.classList.add('show');
+
+    clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2000);
+}
+
 // Actualizar contador de líneas y vista previa en tiempo real
 lyricsInput.addEventListener('input', function () {
     const lines = this.value.split('\n').filter(line => line.trim() !== '');
@@ -21,8 +50,6 @@ lyricsInput.addEventListener('input', function () {
     const firstLine = lines[0] || 'La letra aparecerá aquí...';
     previewFirstLine.textContent = firstLine;
 
-    // Actualizar números de línea
-    updateLineNumbers();
 });
 
 // Actualizar vista previa del título
@@ -32,8 +59,7 @@ titleInput.addEventListener('input', function () {
 
 
 // ==== SCRAPER DE LETRASS ====
-
-function buscarYAgregar() {
+function buscarPorNombre() {
     const artista = document.getElementById('artistaBuscar').value.trim();
     const cancion = document.getElementById('cancionBuscar').value.trim();
 
@@ -51,8 +77,6 @@ function extraerLetra() {
     const input = document.getElementById('linkLetra');
     const link = input ? input.value.trim() : '';
 
-    console.log('🔗 Link ingresado:', link);
-
     if (!link) {
         showToast('⚠️ Ingresa un link de letra', 'warning');
         return;
@@ -67,25 +91,20 @@ document.getElementById('cancionBuscar').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') buscarYAgregar();
 });
 
-
-// Actualizar números de línea
-function updateLineNumbers() {
-    const lines = lyricsInput.value.split('\n');
-    const totalLines = lines.length;
-    let numbersHTML = '';
-    for (let i = 1; i <= Math.max(totalLines, 10); i++) {
-        numbersHTML += i + '<br>';
+socket.on('resultado-busqueda', (data) => {
+    if (data.exito && data.letra) {
+        lyricsInput.value = data.letra;
+        titleInput.value = data.titulo || '';
+    } else {
+        console.log('❌ Error al buscar letra:', data.mensaje);
+        showToast(`❌ ${data.mensaje}`, 'error');
     }
-    lineNumbersDiv.innerHTML = numbersHTML;
-}
+});
 
 // Sincronizar scroll del textarea con los números de línea
 lyricsInput.addEventListener('scroll', function () {
     lineNumbersDiv.scrollTop = this.scrollTop;
 });
-
-// Inicializar números de línea
-updateLineNumbers();
 
 // ===== GUARDAR CANCIÓN =====
 function guardarCancion(event) {
@@ -160,8 +179,6 @@ function limpiarFormulario() {
     lineCountSpan.textContent = '0';
     previewTitle.textContent = 'Título de la canción';
     previewFirstLine.textContent = 'La letra aparecerá aquí...';
-    updateLineNumbers();
-
     titleInput.focus();
     mostrarToast('🗑️', 'Formulario limpiado', 'info');
 }
