@@ -1,7 +1,6 @@
-//const cancionService = require('../services/cancionService');
+const cancionService = require('./../services/cancionService');
 const scraperService = require('./../services/scraperService');
 const fs = require('node:fs');
-
 
 // Estado del teleprompter
 let estado = {
@@ -11,16 +10,27 @@ let estado = {
   modoPantalla: 'letras'
 };
 
-// Cargar canciones desde archivo
-const cancionesPath = './data/canciones.json';
-if (fs.existsSync(cancionesPath)) {
-  estado.canciones = JSON.parse(fs.readFileSync(cancionesPath, 'utf8'));
+// Cargar canciones desde el servicio
+function cargarCancionesEnEstado() {
+    estado.canciones = cancionService.obtenerTodas();
+    // Resetear índices si no hay canciones
+    if (estado.canciones.length === 0) {
+        estado.cancionActual = 0;
+        estado.lineaActual = 0;
+    } else if (estado.cancionActual >= estado.canciones.length) {
+        estado.cancionActual = estado.canciones.length - 1;
+        estado.lineaActual = 0;
+    }
 }
+
+// Cargar canciones iniciales
+cargarCancionesEnEstado();
+
 
 function configurarSockets(io) {
     // WebSocket
     io.on('connection', (socket) => {
-        console.log('Cliente conectado:', socket.id);
+        console.log('🟢 Cliente conectado:', socket.id);
 
         // Enviar estado actual al conectar
         socket.emit('estado-inicial', estado);
