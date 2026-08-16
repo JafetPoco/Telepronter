@@ -246,38 +246,6 @@ function showToast(message, type = 'info') {
     }, 2000);
 }
 
-function buscarYAgregar() {
-    const artista = document.getElementById('artistaBuscar').value.trim();
-    const cancion = document.getElementById('cancionBuscar').value.trim();
-
-    if (!artista || !cancion) {
-        document.getElementById('resultadoBusqueda').innerHTML =
-            '⚠️ Ingresa artista y canción';
-        document.getElementById('resultadoBusqueda').className = 'mt-3 text-sm text-yellow-400';
-        return;
-    }
-
-    socket.emit('buscar-letra', { artista, cancion });
-}
-
-function extraerLetra() {
-    const input = document.getElementById('linkLetra');
-    const link = input ? input.value.trim() : '';
-
-    if (!link) {
-        showToast('⚠️ Ingresa un link de letra', 'warning');
-        return;
-    }
-
-    socket.emit('extraer-letra', link);
-    showToast('Buscando letra...', 'info');
-}
-
-// Enter para buscar
-document.getElementById('cancionBuscar').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') buscarYAgregar();
-});
-
 setTimeout(() => {
     if (canciones.length === 0) {
         console.log('Esperando datos del servidor...');
