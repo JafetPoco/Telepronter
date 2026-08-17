@@ -4,10 +4,10 @@ const fs = require('node:fs');
 
 // Estado del teleprompter
 let estado = {
-  cancionActual: 0,
-  lineaActual: 0,
-  canciones: [],
-  modoPantalla: 'letras'
+    cancionActual: 0,
+    lineaActual: 0,
+    canciones: [],
+    modoPantalla: 'letras'
 };
 
 // Cargar canciones desde el servicio
@@ -147,6 +147,34 @@ function configurarSockets(io) {
             }
         });
 
+        socket.on('agregar-cancion', (titulo, letra) => {
+            if (!titulo || !letra) {
+                socket.emit('resultado-agregar', {
+                    exito: false,
+                    mensaje: 'Datos incompletos para agregar la canción'
+                });
+                return;
+            }
+
+            try {
+                cancionService.agregar(titulo, letra);
+                cancionService.guardarCanciones();
+                cancionService.recargar();
+                cargarCancionesEnEstado();
+
+                io.emit('actualizar-estado', estado);
+                socket.emit('resultado-agregar', {
+                    exito: true,
+                    mensaje: `Canción "${nuevaCancion.titulo}" agregada`,
+                    cancion: nuevaCancion
+                });
+            } catch (error) {
+                socket.emit('resultado-agregar', {
+                    exito: false,
+                    mensaje: 'Error al agregar la canción: ' + error.message
+                });
+            }
+        });
     });
 }
 

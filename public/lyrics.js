@@ -106,29 +106,10 @@ function guardarCancion(event) {
         return false;
     }
 
-    // Dividir la letra en líneas (filtrando líneas vacías)
-    const lineas = letra.split('\n').filter(line => line.trim() !== '');
-
-    if (lineas.length === 0) {
-        mostrarToast('❌', 'La letra debe tener al menos una línea', 'error');
-        lyricsInput.focus();
-        return false;
-    }
-
-    // Crear objeto canción
-    const cancion = {
-        id: Date.now(),
-        titulo: titulo,
-        letra: lineas
-    };
-
-    console.log('📀 Canción guardada:', cancion);
-
-    // Aquí enviarías la canción al servidor vía socket.io
-    // socket.emit('agregar-cancion', cancion);
+    socket.emit('agregar-cancion', titulo, letra);
 
     // Mostrar éxito
-    mostrarToast('✅', `"${titulo}" guardada correctamente (${lineas.length} líneas)`, 'success');
+    mostrarToast('✅', `"${titulo}" guardada correctamente`, 'success');
 
     // Efecto visual en el botón
     const submitBtn = form.querySelector('button[type="submit"]');

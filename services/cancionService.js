@@ -1,4 +1,4 @@
-//const { parsearLetra, extraerTituloDeUrl } = require('../utils/letraParser');
+const { parsearLetra } = require('../utils/letraParser');
 const fs = require('node:fs');
 const path = require('node:path');
 
@@ -97,7 +97,7 @@ class CancionService {
     buscarPorTitulo(busqueda) {
         if (!busqueda) return this.canciones;
         const termino = busqueda.toLowerCase();
-        return this.canciones.filter(c => 
+        return this.canciones.filter(c =>
             c.titulo.toLowerCase().includes(termino)
         );
     }
@@ -105,6 +105,15 @@ class CancionService {
     // Recarga las canciones desde el archivo (útil si se modificó externamente)
     recargar() {
         return this.cargarCanciones();
+    }
+
+    agregar(titulo, letra) {
+        if (!titulo || !letra) {
+            throw new Error('Título y letra son obligatorios para agregar una canción');
+        }
+
+        const cancion = parsearLetra(titulo, letra);
+        this.canciones.push(cancion);
     }
 }
 

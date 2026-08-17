@@ -2,6 +2,7 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const fs = require('node:fs').promises;
 const path = require('node:path');
+const { extraerTituloDeUrl } = require('../utils/letraParser');
 
 class ScraperService {
     constructor() {
@@ -34,7 +35,7 @@ class ScraperService {
                 if (letra && letra.length > 50) {
                     return {
                         exito: true,
-                        titulo: this.extraerTituloDeUrl(urlFinal),
+                        titulo: extraerTituloDeUrl(urlFinal),
                         letra: letra,
                         fuente: new URL(urlFinal).hostname
                     };
@@ -51,25 +52,6 @@ class ScraperService {
                 exito: false,
                 mensaje: 'Error al Estraer: ' + error.message
             };
-        }
-    }
-
-    extraerTituloDeUrl(url) {
-        try {
-            const urlObj = new URL(url);
-            const pathname = urlObj.pathname;
-            const partes = pathname.split('/').filter(Boolean);
-
-            if (partes.length >= 2) {
-                // Tomar la última parte de la URL y reemplazar guiones por espacios
-                const titulo = partes[partes.length - 1].replace(/-/g, ' ');
-                // Decodificar caracteres especiales y capitalizar
-                return decodeURIComponent(titulo).replace(/\b\w/g, l => l.toUpperCase());
-            }
-            return 'Título no disponible';
-        } catch (error) {
-            console.error('Error al extraer título de URL:', error);
-            return 'Título no disponible';
         }
     }
 
