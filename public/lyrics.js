@@ -9,7 +9,6 @@ const lineNumbersDiv = document.getElementById('lineNumbers');
 
 const getInputValue = (input) => input ? input.value.trim() : '';
 
-
 let toastTimeout;
 function showToast(message, type = 'info') {
     const toast = document.getElementById('toast');
@@ -95,13 +94,13 @@ function guardarCancion(event) {
 
     // Validaciones
     if (!titulo) {
-        mostrarToast('❌', 'El título de la canción es obligatorio', 'error');
+        mostrarToast('El título de la canción es obligatorio', 'error');
         titleInput.focus();
         return false;
     }
 
     if (!letra) {
-        mostrarToast('❌', 'La letra de la canción es obligatoria', 'error');
+        mostrarToast('La letra de la canción es obligatoria', 'error');
         lyricsInput.focus();
         return false;
     }
@@ -116,8 +115,6 @@ function guardarCancion(event) {
     submitBtn.classList.add('save-success');
     setTimeout(() => submitBtn.classList.remove('save-success'), 500);
 
-    limpiarFormulario();
-
     return false;
 }
 
@@ -130,33 +127,12 @@ function limpiarFormulario() {
 
     // Resetear contadores y vista previa
     if (titleInput) titleInput.focus();
-    mostrarToast('🗑️', 'Formulario limpiado', 'info');
+    mostrarToast('Formulario limpiado', 'info');
 }
 
 // ===== TOAST =====
 function mostrarToast(icon, message, type = 'info') {
-    const toast = document.getElementById('toast');
-    const toastIcon = document.getElementById('toastIcon');
-    const toastMessage = document.getElementById('toastMessage');
-
-    toastIcon.textContent = icon || 'ℹ️';
-    toastMessage.textContent = message;
-
-    // Resetear clase
-    toast.className = 'toast fixed bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/95 backdrop-blur-sm px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl shadow-2xl shadow-black/50 border border-slate-700/50 opacity-0 translate-y-4 pointer-events-none z-50 flex items-center gap-2 sm:gap-3 min-w-[200px] sm:min-w-[280px] justify-center';
-
-    // Forzar reflow
-    void toast.offsetWidth;
-
-    toast.classList.add('show');
-    toast.style.opacity = '1';
-    toast.style.transform = 'translateY(0)';
-
-    clearTimeout(toast._timeout);
-    toast._timeout = setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateY(16px)';
-    }, 3000);
+    showToast(`${icon} ${message}`.trim(), type);
 }
 
 // Atajo de teclado: Ctrl+Enter para guardar

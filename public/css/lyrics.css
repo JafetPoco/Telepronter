@@ -1,3 +1,22 @@
+.toast {
+    left: 50%;
+    transform: translate(-50%, 16px);
+    max-width: min(560px, calc(100vw - 1rem));
+    width: max-content;
+    box-sizing: border-box;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast.show {
+    opacity: 1 !important;
+    transform: translate(-50%, 0) !important;
+}
+
+#toastIcon,
+#toastMessage {
+    color: #fff;
+}
+
 /* Estilos adicionales para el textarea y detalles */
 .song-textarea {
     resize: vertical;
