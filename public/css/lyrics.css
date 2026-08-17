@@ -1,0 +1,103 @@
+.toast {
+    left: 50%;
+    transform: translate(-50%, 16px);
+    max-width: min(560px, calc(100vw - 1rem));
+    width: max-content;
+    box-sizing: border-box;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast.show {
+    opacity: 1 !important;
+    transform: translate(-50%, 0) !important;
+}
+
+#toastIcon,
+#toastMessage {
+    color: #fff;
+}
+
+/* Estilos adicionales para el textarea y detalles */
+.song-textarea {
+    resize: vertical;
+    min-height: 300px;
+    font-family: 'Courier New', monospace;
+    line-height: 1.8;
+    tab-size: 2;
+    padding-left: 18px !important;
+}
+
+.song-textarea:focus {
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+}
+
+.line-counter {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    opacity: 0.5;
+    user-select: none;
+}
+
+/* Estilos para el contador de líneas */
+.textarea-wrapper {
+    position: relative;
+}
+
+.line-numbers {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #475569;
+    text-align: right;
+    padding-right: 12px;
+    user-select: none;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+
+
+/* Scroll personalizado */
+.song-textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+.song-textarea::-webkit-scrollbar-track {
+    background: #1e293b;
+    border-radius: 10px;
+}
+
+.song-textarea::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 10px;
+}
+
+.song-textarea::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+/* Animación de guardado */
+.save-success {
+    animation: savePulse 0.5s ease;
+}
+
+@keyframes savePulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+/* Badge de estado */
+.status-badge {
+    transition: all 0.3s ease;
+}

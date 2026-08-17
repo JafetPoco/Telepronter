@@ -3,103 +3,24 @@ const http = require('node:http');
 const socketIO = require('socket.io');
 const path = require('node:path');
 const fs = require('node:fs');
+const configurarSockets = require('./routes/socket');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 
-// Estado del teleprompter
-let estado = {
-  cancionActual: 0,
-  lineaActual: 0,
-  canciones: [],
-  modoPantalla: 'letras'
-};
+const PORT = process.env.PORT || 3000;
 
-// Cargar canciones desde archivo
-const cancionesPath = './data/canciones.json';
-if (fs.existsSync(cancionesPath)) {
-  estado.canciones = JSON.parse(fs.readFileSync(cancionesPath, 'utf8'));
-}
-
-// WebSocket
-io.on('connection', (socket) => {
-  console.log('Cliente conectado:', socket.id);
-  
-  // Enviar estado actual al conectar
-  socket.emit('estado-inicial', estado);
-  
-  // Siguiente línea
-  socket.on('siguiente-linea', () => {
-    const cancion = estado.canciones[estado.cancionActual];
-    if (!cancion) return;
-
-    estado.modoPantalla = 'letras';
-    if (estado.lineaActual < cancion.letra.length - 1) {
-      estado.lineaActual++;
-    } else if (estado.cancionActual < estado.canciones.length - 1) {
-      estado.cancionActual++;
-      estado.lineaActual = 0;
-    }
-    io.emit('actualizar-estado', estado);
-  });
-  
-  // Anterior línea
-  socket.on('anterior-linea', () => {
-    const cancion = estado.canciones[estado.cancionActual];
-    if (!cancion) return;
-
-    estado.modoPantalla = 'letras';
-    if (estado.lineaActual > 0) {
-      estado.lineaActual--;
-    } else if (estado.cancionActual > 0) {
-      estado.cancionActual--;
-      estado.lineaActual = estado.canciones[estado.cancionActual].letra.length - 1;
-    }
-    io.emit('actualizar-estado', estado);
-  });
-  
-  // Cambiar canción directamente
-  socket.on('cambiar-cancion', (index) => {
-    if (index >= 0 && index < estado.canciones.length) {
-      estado.cancionActual = index;
-      estado.lineaActual = 0;
-      estado.modoPantalla = 'letras';
-      io.emit('actualizar-estado', estado);
-    }
-  });
-  
-  // Reiniciar canción actual
-  socket.on('reset', () => {
-    estado.lineaActual = 0;
-    estado.modoPantalla = 'letras';
-    io.emit('actualizar-estado', estado);
-  });
-
-  //Ir Coro
-  socket.on('ir-al-coro', () => {
-    const cancion = estado.canciones[estado.cancionActual];
-    if (!cancion) return;
-
-    estado.modoPantalla = 'letras';
-    if(cancion.coros){
-      estado.lineaActual = cancion.coros.principal.inicio;
-    }
-
-    io.emit('actualizar-estado', estado);
-  })
-
-  // Vista principal
-  socket.on('mostrar-vista-principal', () => {
-    estado.modoPantalla = 'principal';
-    io.emit('actualizar-estado', estado);
-  });
-});
+// Configurar sockets
+configurarSockets(io);
 
 // Servir archivos estáticos
 app.use(express.static('public'));
 app.use('/videos', express.static('videos'));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Ruta API para buscar (alternativa HTTP)
+app.use(express.json());
 
 const networkInterfaces = require('node:os').networkInterfaces();
 
@@ -115,7 +36,6 @@ for (const networkInterface of Object.values(networkInterfaces)) {
 }
 
 // Iniciar servidor
-const PORT = 3000;
 server.listen(PORT, () => {
   console.log('\n🎤 Teleprompter Live iniciado');
   console.log(`📺 Pantalla: http://localhost:${PORT}/screen.html`);
