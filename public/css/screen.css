@@ -1,5 +1,15 @@
 /* ===== screen.css - Estilos personalizados para la pantalla ===== */
 
+body {
+  font-family: "Fraunces", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  font-variation-settings:
+    "SOFT" 50,
+    "WONK" 1;
+}
+
 /* Video de fondo */
 #video-bg {
   position: fixed;
@@ -27,10 +37,7 @@
 #lyricDisplay {
   font-size: clamp(1.4rem, 3.2vw, 3.8rem);
   line-height: 1.25;
-  text-shadow: 
-    0 0 20px rgba(96, 165, 250, 0.3),
-    0 0 60px rgba(96, 165, 250, 0.1),
-    0 4px 20px rgba(0, 0, 0, 0.5);
+  text-transform: uppercase;
   transition: all 0.5s ease;
   word-break: break-word;
 }
@@ -51,21 +58,34 @@
   animation: fadeSlideUp 0.5s ease-out;
 }
 
-/* Badge de estado */
-.status-badge {
-  background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(71, 85, 105, 0.5);
+/* Indicador de conexión discreto */
+.status-indicator {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 5;
+  width: 8px;
+  height: 8px;
 }
 
-/* Punto de conexión animado */
 .status-dot {
-  animation: pulse-dot 2s infinite;
+  display: block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #8de2ae;
+  box-shadow: 0 0 8px rgba(141, 226, 174, 0.55);
+  animation: pulse-dot 3s ease-in-out infinite;
+}
+
+.status-dot.disconnected {
+  background: #fca5a5;
+  box-shadow: 0 0 8px rgba(252, 165, 165, 0.5);
 }
 
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  0%, 100% { opacity: 0.55; transform: scale(0.9); }
+  50% { opacity: 0.9; transform: scale(1); }
 }
 
 /* Animación de la imagen principal */
@@ -117,7 +137,9 @@
 
 /* Contenedor de letras */
 .lyric-container {
-  backdrop-filter: blur(5px);
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
   opacity: 1;
   visibility: visible;
   transition: opacity 0.5s ease, visibility 0.5s ease;
@@ -171,13 +193,27 @@ body[data-view="letras"] .lyric-container {
   }
   
   .lyric-container {
-    padding: 1.5rem 1rem !important;
     border-radius: 1.5rem !important;
   }
 }
 
 @media (min-width: 1200px) {
   #lyricDisplay {
-    font-size: clamp(4rem, 2.3vw, 7.2rem);
+    font-size: clamp(5.2rem, 3.5vw, 8.4rem);
+  }
+}
+
+/* Escala tipográfica para proyectores y pantallas de gran formato */
+@media (min-width: 1600px) {
+  #lyricDisplay {
+    font-size: clamp(6.2rem, 5.2vw, 10.2rem);
+    line-height: 1.2;
+  }
+}
+
+@media (min-width: 2400px) {
+  #lyricDisplay {
+    font-size: clamp(8.2rem, 5.7vw, 13.2rem);
+    line-height: 1.16;
   }
 }
