@@ -28,26 +28,32 @@ function actualizarPantalla(estado) {
 
   const cancion = estado.canciones[estado.cancionActual];
   if (!cancion) {
+    lyricDisplay.classList.remove('title-line');
     lyricDisplay.textContent = 'Esperando canción...';
     songInfo.textContent = modoPantalla === 'principal' ? 'Vista principal' : 'Sin canción cargada';
     return;
   }
 
   if (modoPantalla === 'principal') {
+    lyricDisplay.classList.remove('title-line');
     songInfo.textContent = 'Vista principal';
     lyricDisplay.textContent = '';
     return;
   }
 
   const linea = cancion.letra[estado.lineaActual] || '';
+  const esTitulo = estado.lineaActual === 0;
 
+  lyricDisplay.classList.toggle('title-line', esTitulo);
   lyricDisplay.innerHTML = linea;
   songInfo.textContent = `${cancion.titulo} • ${estado.lineaActual + 1}/${cancion.letra.length}`;
 
   // Reanimar efecto
   lyricDisplay.style.animation = 'none';
   lyricDisplay.getBoundingClientRect();
-  lyricDisplay.style.animation = 'lyricReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1)';
+  lyricDisplay.style.animation = esTitulo
+    ? 'titleReveal 1s cubic-bezier(0.16, 1, 0.3, 1), titleGlow 2.5s ease-in-out 1s infinite alternate'
+    : 'lyricReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1)';
 }
 
 function aplicarModoPantalla(modo) {

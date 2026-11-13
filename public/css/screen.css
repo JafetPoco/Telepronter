@@ -62,6 +62,71 @@ body {
   will-change: opacity, filter, transform;
 }
 
+
+#lyricDisplay.title-line {
+  position: relative;
+  display: inline-block;
+
+  background: linear-gradient(
+    100deg,
+    #64101F 0%,
+    #A51E38 45%,
+    #751326 75%,
+    #64101F 100%
+  );
+
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  padding: 0.25em 0.2em;
+
+  filter: drop-shadow(
+    0 2px 3px rgba(75, 12, 25, 0.12)
+  );
+
+  animation: titleReveal 1s cubic-bezier(
+    0.16, 1, 0.3, 1
+  ) both;
+}
+
+/* Líneas doradas laterales */
+#lyricDisplay.title-line::before,
+#lyricDisplay.title-line::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 0.8em;
+  height: 2px;
+  background: #C49A59;
+  opacity: 0.8;
+}
+
+#lyricDisplay.title-line::before {
+  right: 100%;
+}
+
+#lyricDisplay.title-line::after {
+  left: 100%;
+}
+
+/* Entrada elegante */
+@keyframes titleReveal {
+  from {
+    opacity: 0;
+    filter: blur(8px);
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+  }
+} 
+
+
 /* Indicador de conexión discreto */
 .status-indicator {
   position: fixed;
