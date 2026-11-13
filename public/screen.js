@@ -47,7 +47,7 @@ function actualizarPantalla(estado) {
   // Reanimar efecto
   lyricDisplay.style.animation = 'none';
   lyricDisplay.getBoundingClientRect();
-  lyricDisplay.style.animation = 'fadeSlideUp 0.5s ease-out';
+  lyricDisplay.style.animation = 'lyricReveal 0.85s cubic-bezier(0.22, 1, 0.36, 1)';
 }
 
 function aplicarModoPantalla(modo) {
